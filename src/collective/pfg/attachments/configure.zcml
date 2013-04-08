@@ -1,0 +1,26 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns:five="http://namespaces.zope.org/five"
+  xmlns:cmf="http://namespaces.zope.org/cmf"
+  xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+  i18n_domain="collective.pfg.attachments">
+
+  <includeDependencies package="." />
+
+  <class class=".adapter.FormSaveAttachmentsAdapter"/>
+
+  <five:registerPackage package="." initialize=".initialize" />
+
+  <browser:resourceDirectory
+    name="collective.pfg.attachments"
+    directory="resources" />
+
+  <genericsetup:registerProfile
+    name="default"
+    title="collective.pfg.attachments"
+    directory="profile"
+    description="Attachments Data Adapter for PloneFormGen"
+    provides="Products.GenericSetup.interfaces.EXTENSION" />
+
+</configure>
