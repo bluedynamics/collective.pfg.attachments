@@ -1,3 +1,9 @@
+import uuid
+import datetime
+from types import StringTypes
+from ZODB.blob import Blob
+from persistent.dict import PersistentDict
+from zope.annotation.interfaces import IAnnotations
 from AccessControl import ClassSecurityInfo
 from Products.CMFPlone.utils import safe_hasattr
 from Products.Archetypes import atapi
@@ -5,6 +11,16 @@ from Products.ATContentTypes.content.base import registerATCT
 from Products.PloneFormGen.config import LP_SAVE_TO_CANONICAL
 from Products.PloneFormGen.content.saveDataAdapter import FormSaveDataAdapter
 from . import config
+
+
+class Attachment(PersistentDict):
+
+    def __init__(self, filename, mimetype, enc, data):
+        self.attrs['filename'] = filename
+        self.attrs['mimetype'] = mimetype
+        self.attrs['enc'] = enc
+        self.attrs['data'] = Blob(data)
+        self.attrs['created'] = datetime.datetime.now()
 
 
 class FormSaveDataAndAttachmentsAdapter(FormSaveDataAdapter):
@@ -39,6 +55,13 @@ class FormSaveDataAndAttachmentsAdapter(FormSaveDataAdapter):
                     target.onSuccess(fields, REQUEST, loopstop=True)
                     return
 
+        ANNOTATION_KEY = 'formgen_attachments'
+        annotations = IAnnotations(self)
+        attachments = annotations.get(ANNOTATION_KEY, None)
+        if attachments is None:
+            attachments = PersistentDict()
+            annotations[ANNOTATION_KEY] = attachments
+
         from ZPublisher.HTTPRequest import FileUpload
 
         data = []
@@ -53,16 +76,10 @@ class FormSaveDataAndAttachmentsAdapter(FormSaveDataAdapter):
                     fdata = file.read()
                     filename = file.filename
                     mimetype, enc = guess_content_type(filename, fdata, None)
-
-                    # XXX: save as attachment
-                    # XXX: append file link
-
-                    #if mimetype.find('text/') >= 0:
-                    #    # convert to native eols
-                    #    fdata = fdata.replace('\x0d\x0a', '\n').replace('\x0a', '\n').replace('\x0d', '\n')
-                    #    data.append( '%s:%s:%s:%s' %  (filename, mimetype, enc, fdata) )
-                    #else:
-                    #    data.append( '%s:%s:%s:Binary upload discarded' %  (filename, mimetype, enc) )
+                    attachment = Attachment(filename, mimetype, enc, fdata)
+                    attachment_id = str(uuid.uuid4())
+                    attachments[attachment_id] = attachment
+                    data.append('attachment:%s' % attachment_id)
                 else:
                     data.append('NO UPLOAD')
             elif not f.isLabel():
