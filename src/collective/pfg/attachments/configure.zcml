@@ -8,7 +8,7 @@
 
   <includeDependencies package="." />
 
-  <class class=".adapter.FormSaveAttachmentsAdapter"/>
+  <class class=".adapter.FormSaveDataAndAttachmentsAdapter"/>
 
   <five:registerPackage package="." initialize=".initialize" />
 
@@ -16,11 +16,18 @@
     name="collective.pfg.attachments"
     directory="resources" />
 
+  <browser:page
+    for="*"
+    name="fg_savedataandattachments_view"
+    class=".views.SaveDataAndAttachmentsView"
+    template="savedataandattachments_view.pt"
+    permission="zope2.View" />
+
   <genericsetup:registerProfile
     name="default"
     title="collective.pfg.attachments"
     directory="profile"
-    description="Attachments Data Adapter for PloneFormGen"
+    description="Data Adapter for PloneFormGen also storing attachments"
     provides="Products.GenericSetup.interfaces.EXTENSION" />
 
 </configure>

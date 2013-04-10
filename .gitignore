@@ -1,2 +1,4 @@
+*.pyc
+*.pyo
 /src/collective.pfg.attachments.egg-info/
 
