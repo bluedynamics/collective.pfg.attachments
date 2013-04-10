@@ -10,3 +10,4 @@ setDefaultRoles(
     ADD_PERMISSIONS['FormSaveDataAndAttachmentsAdapter'],
     ('Manager', 'Owner', 'Contributor', 'Site Administrator')
 )
+ANNOTATION_KEY = '__fg_attachments__'

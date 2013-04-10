@@ -12,7 +12,16 @@
     <metal:block define-macro="content-core">
 
       <table tal:define="rows view/rows">
-        
+        <tr tal:repeat="row rows">
+          <tal:td repeat="col row">
+            <span tal:condition="python: col['type'] == 'string'"
+                  tal:replace="col/value">value</span>
+            <a href=""
+               tal:condition="python: col['type'] == 'attachment'"
+               tal:attributes="href col/url"
+               tal:content="col/value">value</a>
+          </tal:td>
+        </tr>
       </table>
 
     </metal:block>

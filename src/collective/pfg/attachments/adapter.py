@@ -47,12 +47,11 @@ class FormSaveDataAndAttachmentsAdapter(FormSaveDataAdapter):
                     target.onSuccess(fields, REQUEST, loopstop=True)
                     return
 
-        ANNOTATION_KEY = 'formgen_attachments'
         annotations = IAnnotations(self)
-        attachments = annotations.get(ANNOTATION_KEY, None)
+        attachments = annotations.get(config.ANNOTATION_KEY, None)
         if attachments is None:
             attachments = OOBTree()
-            annotations[ANNOTATION_KEY] = attachments
+            annotations[config.ANNOTATION_KEY] = attachments
 
         from ZPublisher.HTTPRequest import FileUpload
 
