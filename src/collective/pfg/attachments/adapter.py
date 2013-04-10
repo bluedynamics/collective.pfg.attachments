@@ -43,7 +43,7 @@ class FormSaveDataAndAttachmentsAdapter(FormSaveDataAdapter):
                 cf = parent.getCanonical()
                 target = cf.get(self.getId())
                 if target is not None \
-                  and target.meta_type == 'FormSaveDataAdapter':
+                  and target.meta_type == 'FormSaveDataAndAttachmentsAdapter':
                     target.onSuccess(fields, REQUEST, loopstop=True)
                     return
 
