@@ -2,8 +2,10 @@ import uuid
 import datetime
 from types import StringTypes
 from ZODB.blob import Blob
+from BTrees.OOBTree import OOBTree
 from persistent.dict import PersistentDict
 from zope.annotation.interfaces import IAnnotations
+from zope.contenttype import guess_content_type
 from AccessControl import ClassSecurityInfo
 from Products.CMFPlone.utils import safe_hasattr
 from Products.Archetypes import atapi
@@ -11,16 +13,6 @@ from Products.ATContentTypes.content.base import registerATCT
 from Products.PloneFormGen.config import LP_SAVE_TO_CANONICAL
 from Products.PloneFormGen.content.saveDataAdapter import FormSaveDataAdapter
 from . import config
-
-
-class Attachment(PersistentDict):
-
-    def __init__(self, filename, mimetype, enc, data):
-        self.attrs['filename'] = filename
-        self.attrs['mimetype'] = mimetype
-        self.attrs['enc'] = enc
-        self.attrs['data'] = Blob(data)
-        self.attrs['created'] = datetime.datetime.now()
 
 
 class FormSaveDataAndAttachmentsAdapter(FormSaveDataAdapter):
@@ -59,7 +51,7 @@ class FormSaveDataAndAttachmentsAdapter(FormSaveDataAdapter):
         annotations = IAnnotations(self)
         attachments = annotations.get(ANNOTATION_KEY, None)
         if attachments is None:
-            attachments = PersistentDict()
+            attachments = OOBTree()
             annotations[ANNOTATION_KEY] = attachments
 
         from ZPublisher.HTTPRequest import FileUpload
@@ -76,10 +68,15 @@ class FormSaveDataAndAttachmentsAdapter(FormSaveDataAdapter):
                     fdata = file.read()
                     filename = file.filename
                     mimetype, enc = guess_content_type(filename, fdata, None)
-                    attachment = Attachment(filename, mimetype, enc, fdata)
+                    attachment = PersistentDict()
+                    attachment['filename'] = filename
+                    attachment['mimetype'] = mimetype
+                    attachment['enc'] = enc
+                    attachment['data'] = Blob(fdata)
+                    attachment['created'] = datetime.datetime.now()
                     attachment_id = str(uuid.uuid4())
                     attachments[attachment_id] = attachment
-                    data.append('attachment:%s' % attachment_id)
+                    data.append('__fg_attachment__:%s' % attachment_id)
                 else:
                     data.append('NO UPLOAD')
             elif not f.isLabel():

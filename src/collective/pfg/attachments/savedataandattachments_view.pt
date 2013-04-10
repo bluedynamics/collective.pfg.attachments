@@ -11,7 +11,9 @@
   <metal:content-core fill-slot="content-core">
     <metal:block define-macro="content-core">
 
-      Data and Attachments
+      <table tal:define="rows view/rows">
+        
+      </table>
 
     </metal:block>
   </metal:content-core>

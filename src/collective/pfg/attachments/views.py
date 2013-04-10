@@ -16,4 +16,11 @@ from Products.Five import BrowserView
 
 
 class SaveDataAndAttachmentsView(BrowserView):
-    pass
+    
+    @property
+    def rows(self):
+        import pdb;pdb.set_trace()
+        colnames = self.context.getColumnNames();
+        result = self.context.getSavedFormInput();
+        return []
+        #rowdict = self.context.rowAsColDict(row, colnames)
