@@ -1,0 +1,14 @@
+table.fg_data_table {
+    width:100%;
+    border-spacing:0;
+    border-collapse:collapse;
+    border:#ccc 1px solid;
+}
+table.fg_data_table th {
+    background-color:#efefef;
+}
+table.fg_data_table th,
+table.fg_data_table td {
+    padding:0.35em;
+    border:#ccc 1px solid;
+}

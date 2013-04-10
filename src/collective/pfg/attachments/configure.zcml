@@ -18,9 +18,15 @@
 
   <browser:page
     for="*"
+    name="download_attachment"
+    class=".views.DownloadAttachment"
+    permission="zope2.View" />
+
+  <browser:page
+    for="*"
     name="fg_savedataandattachments_view"
     class=".views.SaveDataAndAttachmentsView"
-    template="savedataandattachments_view.pt"
+    template="data_view.pt"
     permission="zope2.View" />
 
   <genericsetup:registerProfile

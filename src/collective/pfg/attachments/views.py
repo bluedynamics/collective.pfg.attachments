@@ -46,7 +46,7 @@ class SaveDataAndAttachmentsView(Attachments):
                 col = dict()
                 if res_col.startswith('__fg_attachment__:'):
                     uid = res_col[18:]
-                    attachment = attachments.get()
+                    attachment = attachments.get(uid)
                     if not attachment:
                         col['type'] = 'string'
                         col['value'] = 'Attachment not found'

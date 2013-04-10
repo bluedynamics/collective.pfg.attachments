@@ -11,16 +11,22 @@
   <metal:content-core fill-slot="content-core">
     <metal:block define-macro="content-core">
 
-      <table tal:define="rows view/rows">
+      <table tal:define="rows view/rows" class="fg_data_table">
+        <tr>
+          <th tal:repeat="colname view/colnames"
+              tal:content="colname">colname</th>
+        </tr>
         <tr tal:repeat="row rows">
-          <tal:td repeat="col row">
+          <td tal:repeat="col row">
             <span tal:condition="python: col['type'] == 'string'"
                   tal:replace="col/value">value</span>
-            <a href=""
-               tal:condition="python: col['type'] == 'attachment'"
-               tal:attributes="href col/url"
-               tal:content="col/value">value</a>
-          </tal:td>
+            <tal:attachment condition="python: col['type'] == 'attachment'">
+              <a href="" tal:attributes="href col/url">
+                <span tal:replace="col/value">value</span>
+                (<span tal:replace="col/mimetype">value</span>)
+              </a>
+            </tal:attachment>
+          </td>
         </tr>
       </table>
 
